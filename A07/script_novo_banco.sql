@@ -4,19 +4,20 @@ DROP TABLE clients;
 CREATE TABLE IF NOT EXISTS clients (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     saldo INTEGER NOT NULL,
-    limite INTEGER NOT NULL
+    limite INTEGER NOT NULL,
+    CHECK (saldo >= -limite),
+    CHECK (limite > 0)
 );
 
 INSERT INTO clients(saldo,limite)
 VALUES
-    (10000,0),
-    (80000,0),
-    (1000000, 0),
-    (10000000, 0),
-    (500000, 0);
+    (0,10000),
+    (0,80000),
+    (0, 1000000),
+    (0, 10000000),
+    (0, 500000);
    
-
-CREATE TABLE IF NOT EXISTS trasictions(
+CREATE TABLE IF NOT EXISTS transactions(
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     tipo CHAR(1),
     descricao VARCHAR(10) NOT NULL,
@@ -25,5 +26,15 @@ CREATE TABLE IF NOT EXISTS trasictions(
     realizada_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO trasictions (tipo, descricao, valor,cliente_id)
-VALUES ('d','amarelo',80000,"3092167d-76d2-4d12-ab02-a0a492c052de")
+INSERT INTO transactions (tipo, descricao, valor,cliente_id)
+VALUES ('d','amarelo',80000,'e42de750-24e1-4ed2-b106-62857a9a2106');
+
+UPDATE clients
+SET saldo = saldo + 80000
+WHERE id = 'e42de750-24e1-4ed2-b106-62857a9a2106';
+
+SELECT *
+FROM transactions;
+
+
+
